@@ -214,6 +214,7 @@ radio_rf_task.obj: ../CC1310_LAUNCHXL.h
 radio_rf_task.obj: ../RFQueue.h
 radio_rf_task.obj: C:/ti/simplelink_cc13x0_sdk_2_30_00_20/source/ti/devices/cc13x0/driverlib/rf_data_entry.h
 radio_rf_task.obj: ../smartrf_settings/smartrf_settings.h
+radio_rf_task.obj: ../application_settings.h
 radio_rf_task.obj: D:/Learn/cc1310/project2.3/lock_module/common_node.h
 radio_rf_task.obj: C:/ti/xdctools_3_50_08_24_core/packages/xdc/runtime/IHeap.h
 radio_rf_task.obj: C:/ti/xdctools_3_50_08_24_core/packages/xdc/runtime/System.h
@@ -451,6 +452,7 @@ C:/ti/simplelink_cc13x0_sdk_2_30_00_20/source/ti/drivers/UART.h:
 ../RFQueue.h: 
 C:/ti/simplelink_cc13x0_sdk_2_30_00_20/source/ti/devices/cc13x0/driverlib/rf_data_entry.h: 
 ../smartrf_settings/smartrf_settings.h: 
+../application_settings.h: 
 D:/Learn/cc1310/project2.3/lock_module/common_node.h: 
 C:/ti/xdctools_3_50_08_24_core/packages/xdc/runtime/IHeap.h: 
 C:/ti/xdctools_3_50_08_24_core/packages/xdc/runtime/System.h: 

@@ -15,6 +15,7 @@ ORDERED_OBJS += \
 "./CC1310_LAUNCHXL.obj" \
 "./CC1310_LAUNCHXL_fxns.obj" \
 "./RFQueue.obj" \
+"./application_settings.obj" \
 "./ccfg.obj" \
 "./common_node.obj" \
 "./crc.obj" \
@@ -179,8 +180,8 @@ lock_module.hex: $(EXE_OUTPUTS)
 # Other Targets
 clean:
 	-$(RM) $(BIN_OUTPUTS__QUOTED)$(EXE_OUTPUTS__QUOTED)
-	-$(RM) "CC1310_LAUNCHXL.obj" "CC1310_LAUNCHXL_fxns.obj" "RFQueue.obj" "ccfg.obj" "common_node.obj" "crc.obj" "heap_.obj" "mian.obj" "protocol_rf_task.obj" "protocol_uart_task.obj" "radio_rf_task.obj" "uart_task.obj" "smartrf_settings\smartrf_settings.obj" 
-	-$(RM) "CC1310_LAUNCHXL.d" "CC1310_LAUNCHXL_fxns.d" "RFQueue.d" "ccfg.d" "common_node.d" "crc.d" "heap_.d" "mian.d" "protocol_rf_task.d" "protocol_uart_task.d" "radio_rf_task.d" "uart_task.d" "smartrf_settings\smartrf_settings.d" 
+	-$(RM) "CC1310_LAUNCHXL.obj" "CC1310_LAUNCHXL_fxns.obj" "RFQueue.obj" "application_settings.obj" "ccfg.obj" "common_node.obj" "crc.obj" "heap_.obj" "mian.obj" "protocol_rf_task.obj" "protocol_uart_task.obj" "radio_rf_task.obj" "uart_task.obj" "smartrf_settings\smartrf_settings.obj" 
+	-$(RM) "CC1310_LAUNCHXL.d" "CC1310_LAUNCHXL_fxns.d" "RFQueue.d" "application_settings.d" "ccfg.d" "common_node.d" "crc.d" "heap_.d" "mian.d" "protocol_rf_task.d" "protocol_uart_task.d" "radio_rf_task.d" "uart_task.d" "smartrf_settings\smartrf_settings.d" 
 	-@echo 'Finished clean'
 	-@echo ' '
 

@@ -54,7 +54,7 @@
 /* Application Header files */
 #include "RFQueue.h"
 #include "smartrf_settings/smartrf_settings.h"
-
+#include "application_settings.h"
 #include <ti/devices/DeviceFamily.h>
 #include <common_node.h>
 #include DeviceFamily_constructPath(driverlib/rf_prop_mailbox.h)
@@ -86,7 +86,11 @@
 /* TI-RTOS Task configuration */
 #define RX_TASK_STACK_SIZE 1024
 #define RX_TASK_PRIORITY   5
-
+/* Number of times the CS command should run when the channel is BUSY */
+#define CS_RETRIES_WHEN_BUSY    20
+/* The channel is reported BUSY is the RSSI is above this threshold */
+#define RSSI_THRESHOLD_DBM      -80
+#define IDLE_TIME_US            60000
 /* TX Configuration */
 #define DATA_ENTRY_HEADER_SIZE 8  /* Constant header size of a Generic Data Entry */
 #define MAX_LENGTH             PAYLOAD_LENGTH /* Max length byte the radio will accept */
@@ -267,6 +271,22 @@ static void rxTaskFunction(UArg arg0, UArg arg1)
     /* Configure Sniff-mode part of the RX_SNIFF command */
     configureSniffCmd(&RF_cmdPropRxSniff, WOR_MODE, datarate, WOR_WAKEUPS_PER_SECOND_rx);
 
+    RF_cmdPropTx.pPkt = packet;
+    RF_cmdPropTx.startTrigger.triggerType = TRIG_NOW;
+
+        RF_cmdNop.startTrigger.triggerType = TRIG_ABSTIME;
+        RF_cmdNop.startTrigger.pastTrig = 1;
+
+        /* Set up the next pointers for the command chain */
+        RF_cmdNop.pNextOp = (rfc_radioOp_t*)&RF_cmdPropCs;
+        RF_cmdPropCs.pNextOp = (rfc_radioOp_t*)&RF_cmdCountBranch;
+        RF_cmdCountBranch.pNextOp = (rfc_radioOp_t*)&RF_cmdPropTx;
+        RF_cmdCountBranch.pNextOpIfOk = (rfc_radioOp_t*)&RF_cmdPropCs;
+
+        /* Customize the API commands with application specific defines */
+        RF_cmdPropCs.rssiThr = RSSI_THRESHOLD_DBM;
+        RF_cmdPropCs.csEndTime = (IDLE_TIME_US + 150) * 4; /* Add some margin */
+        RF_cmdCountBranch.counter = CS_RETRIES_WHEN_BUSY;
     /* Request access to the radio */
     rfHandle = RF_open(&rfObject, &RF_prop, (RF_RadioSetup*)&RF_cmdPropRadioDivSetup, &rfParams);
 
@@ -276,8 +296,8 @@ static void rxTaskFunction(UArg arg0, UArg arg1)
     /* Save the current radio time */
     RF_cmdPropRxSniff.startTime = RF_getCurrentTime();
 
-    RF_cmdPropTx.pPkt = packet;
-    RF_cmdPropTx.startTrigger.triggerType = TRIG_NOW;
+
+
     /* Enter main loop */
     while(1)
     {
@@ -292,7 +312,17 @@ static void rxTaskFunction(UArg arg0, UArg arg1)
                 {
                     memcpy(&packet,msg.packetDataPointer+1,msg.packetLength-1);
                     RF_cmdPropTx.pktLen = msg.packetLength-1;
-                    RF_runCmd(rfHandle, (RF_Op*)&RF_cmdPropTx, RF_PriorityNormal, NULL, 0);
+                    /* Set absolute TX time to utilize automatic power management */
+                    RF_cmdNop.startTime = RF_getCurrentTime();
+                    /* Send packet */
+                    RF_runCmd(rfHandle, (RF_Op*)&RF_cmdNop, RF_PriorityNormal,
+                              &callback, 0);
+                    RF_cmdNop.status = IDLE;
+                    RF_cmdPropCs.status = IDLE;
+                    RF_cmdCountBranch.status = IDLE;
+                    RF_cmdPropTx.status = IDLE;
+                    RF_cmdCountBranch.counter = CS_RETRIES_WHEN_BUSY;
+//                    RF_runCmd(rfHandle, (RF_Op*)&RF_cmdPropTx, RF_PriorityNormal, NULL, 0);
                     free_malloc(msg.packetDataPointer);
                 }
 

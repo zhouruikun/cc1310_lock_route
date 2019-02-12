@@ -12,6 +12,7 @@ C_SRCS += \
 ../CC1310_LAUNCHXL.c \
 ../CC1310_LAUNCHXL_fxns.c \
 ../RFQueue.c \
+../application_settings.c \
 ../ccfg.c \
 ../common_node.c \
 ../crc.c \
@@ -26,6 +27,7 @@ C_DEPS += \
 ./CC1310_LAUNCHXL.d \
 ./CC1310_LAUNCHXL_fxns.d \
 ./RFQueue.d \
+./application_settings.d \
 ./ccfg.d \
 ./common_node.d \
 ./crc.d \
@@ -40,6 +42,7 @@ OBJS += \
 ./CC1310_LAUNCHXL.obj \
 ./CC1310_LAUNCHXL_fxns.obj \
 ./RFQueue.obj \
+./application_settings.obj \
 ./ccfg.obj \
 ./common_node.obj \
 ./crc.obj \
@@ -54,6 +57,7 @@ OBJS__QUOTED += \
 "CC1310_LAUNCHXL.obj" \
 "CC1310_LAUNCHXL_fxns.obj" \
 "RFQueue.obj" \
+"application_settings.obj" \
 "ccfg.obj" \
 "common_node.obj" \
 "crc.obj" \
@@ -68,6 +72,7 @@ C_DEPS__QUOTED += \
 "CC1310_LAUNCHXL.d" \
 "CC1310_LAUNCHXL_fxns.d" \
 "RFQueue.d" \
+"application_settings.d" \
 "ccfg.d" \
 "common_node.d" \
 "crc.d" \
@@ -82,6 +87,7 @@ C_SRCS__QUOTED += \
 "../CC1310_LAUNCHXL.c" \
 "../CC1310_LAUNCHXL_fxns.c" \
 "../RFQueue.c" \
+"../application_settings.c" \
 "../ccfg.c" \
 "../common_node.c" \
 "../crc.c" \
