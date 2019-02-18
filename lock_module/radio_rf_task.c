@@ -87,10 +87,10 @@
 #define RX_TASK_STACK_SIZE 1024
 #define RX_TASK_PRIORITY   5
 /* Number of times the CS command should run when the channel is BUSY */
-#define CS_RETRIES_WHEN_BUSY    20
+#define CS_RETRIES_WHEN_BUSY    2000
 /* The channel is reported BUSY is the RSSI is above this threshold */
 #define RSSI_THRESHOLD_DBM      -80
-#define IDLE_TIME_US            60000
+#define IDLE_TIME_US            6000
 /* TX Configuration */
 #define DATA_ENTRY_HEADER_SIZE 8  /* Constant header size of a Generic Data Entry */
 #define MAX_LENGTH             PAYLOAD_LENGTH /* Max length byte the radio will accept */
@@ -220,11 +220,23 @@ void rxTaskInit()
 static RF_CmdHandle asyncCmdHndl = EASYLINK_RF_CMD_HANDLE_INVALID;
 
 uint8_t   rec_flag=0;
+
+
+
+
+
+
+
+
+
+
+
 void send_to_rf(uint8_t *data,uint8_t len)
 {
     //force abort (gracefull param set to 0)
     MsgObj msg;
-    msg.packetDataPointer = get_malloc();//malloc(1);
+//    msg.packetDataPointer = get_malloc();//malloc(100);
+    msg.packetDataPointer = malloc(len);
     msg.packetLength=len;
     memcpy( msg.packetDataPointer,data,msg.packetLength);
     if(!Mailbox_post(mbx_radio_Handle, &msg, BIOS_NO_WAIT))
@@ -323,7 +335,8 @@ static void rxTaskFunction(UArg arg0, UArg arg1)
                     RF_cmdPropTx.status = IDLE;
                     RF_cmdCountBranch.counter = CS_RETRIES_WHEN_BUSY;
 //                    RF_runCmd(rfHandle, (RF_Op*)&RF_cmdPropTx, RF_PriorityNormal, NULL, 0);
-                    free_malloc(msg.packetDataPointer);
+                    //free_malloc(msg.packetDataPointer);
+                    free(msg.packetDataPointer);
                 }
 
         /* Log RX_SNIFF status */
